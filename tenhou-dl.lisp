@@ -32,5 +32,5 @@ Example: tenhou-dl ID12345678-6fnB8AoP \"C:\\tenhou\\logs\\\"~%")
 
 (defun parse-replay-response (response)
   (loop for el in (cdr (cl-html-parse:parse-html response))
-        when (and (listp el) (equalp (nth 1 el) "DOWNLOAD"))
-          collect (nth 2 (first el))))
+        when (and (listp el) (equalp (second el) "DOWNLOAD"))
+          collect (third (first el))))
