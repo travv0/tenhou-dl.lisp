@@ -7,21 +7,26 @@
       (format t "Usage: tenhou-dl <Tenhou ID> <Log path>
 Example: tenhou-dl ID12345678-6fnB8AoP \"C:\\tenhou\\logs\\\"~%")
       (format t "~%Downloaded ~a replay~:p~%"
-              (count t (download-replays (second sb-ext:*posix-argv*)
+              (count-if-not #'null (download-replays (second sb-ext:*posix-argv*)
                                          (third sb-ext:*posix-argv*))))))
 
 (defun download-replays (tenhou-id log-dir)
-  (map 'list (lambda (url) (download-replay url log-dir))
+  "Download all Tenhou replays for games played by user with ID `tenhou-id'
+in the last 10 days to `log-dir'.  Returns a list of paths of saved replays.
+Skips any replays that already exist in `log-dir'."
+  (map 'list (lambda (url)  (download-replay url log-dir))
        (get-replay-urls tenhou-id)))
 
 (defun download-replay (url log-dir)
+  "Download Tenhou replay from `url' to `log-dir'.  Skips if replay already in `log-dir'"
   (let* ((full-url (format nil "https://tenhou.net~a" url))
          (file-name (format nil "~a.mjlog" (subseq url (+ (position #\= url) 1))))
          (subdir (subseq file-name 0 6))
          (destination-path (format nil "~a/~a/~a" log-dir subdir file-name)))
     (unless (cl-fad:file-exists-p destination-path)
       (format t "~a ==>~%~t~t~a~%" full-url destination-path)
-      (trivial-download:download full-url destination-path :quiet t))))
+      (when (trivial-download:download full-url destination-path :quiet t)
+        destination-path))))
 
 (defun get-replay-urls (tenhou-id)
   (parse-replay-response (get-replay-response tenhou-id)))

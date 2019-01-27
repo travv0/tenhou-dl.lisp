@@ -1,4 +1,6 @@
 ;;;; package.lisp
 
 (defpackage :tenhou-dl
-  (:use :cl))
+  (:use :cl)
+  (:export :download-replays
+           :download-replay))
