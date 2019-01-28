@@ -36,4 +36,11 @@
 (push (cl-fad:pathname-as-directory (sb-posix:getcwd)) asdf:*central-registry*)
 
 (ql:quickload :tenhou-dl)
-(sb-ext:save-lisp-and-die "tenhou-dl.exe" :toplevel #'tenhou-dl::-main :executable t)
+
+(let* ((p (search "Windows" (software-type)))
+       (extension (if (and p (= 0 p))
+                      ".exe"
+                      "")))
+  (sb-ext:save-lisp-and-die (format nil "tenhou-dl~a" extension)
+                            :toplevel #'tenhou-dl::-main
+                            :executable t))
