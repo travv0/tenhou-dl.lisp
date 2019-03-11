@@ -7,15 +7,16 @@
       (format t "Usage: tenhou-dl <Tenhou ID> <Log path>
 Example: tenhou-dl ID12345678-6fnB8AoP \"C:\\tenhou\\logs\\\"~%")
       (format t "~%Downloaded ~a replay~:p~%"
-              (count-if-not #'null (download-replays (second sb-ext:*posix-argv*)
-                                         (third sb-ext:*posix-argv*))))))
+              (length (download-replays (second sb-ext:*posix-argv*)
+                                        (third sb-ext:*posix-argv*))))))
 
 (defun download-replays (tenhou-id log-dir)
   "Download all Tenhou replays for games played by user with ID `tenhou-id'
 in the last 10 days to `log-dir'.  Returns a list of paths of saved replays.
 Skips any replays that already exist in `log-dir'."
-  (map 'list (lambda (url)  (download-replay url log-dir))
-       (get-replay-urls tenhou-id)))
+  (remove-if #'null
+             (map 'list (lambda (url)  (download-replay url log-dir))
+                  (get-replay-urls tenhou-id))))
 
 (defun download-replay (url log-dir)
   "Download Tenhou replay from `url' to `log-dir'.  Skips if replay already in `log-dir'"
