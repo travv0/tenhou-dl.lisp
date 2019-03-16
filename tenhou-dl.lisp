@@ -25,8 +25,8 @@ Skips any replays that already exist in `log-dir'."
          (subdir (subseq file-name 0 6))
          (destination-path (format nil "~a/~a/~a" log-dir subdir file-name)))
     (unless (cl-fad:file-exists-p destination-path)
-      (format t "~a ==>~%~t~t~a~%" full-url destination-path)
       (when (trivial-download:download full-url destination-path :quiet t)
+        (format t "~a ==>~%~t~t~a~%" full-url destination-path)
         destination-path))))
 
 (defun get-replay-urls (tenhou-id)
