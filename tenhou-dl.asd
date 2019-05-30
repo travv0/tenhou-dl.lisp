@@ -9,6 +9,7 @@
   :depends-on (:drakma
                :cl-html-parse
                :trivial-download
-               :cl-fad)
+               :cl-fad
+               :lparallel)
   :components ((:file "package")
                (:file "tenhou-dl")))
