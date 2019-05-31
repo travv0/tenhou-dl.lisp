@@ -10,6 +10,7 @@
                :cl-html-parse
                :trivial-download
                :cl-fad
-               :lparallel)
+               :lparallel
+               :cl-cpus)
   :components ((:file "package")
                (:file "tenhou-dl")))

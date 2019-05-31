@@ -8,7 +8,8 @@
   (cond ((/= (length sb-ext:*posix-argv*) 3)
          (format t "Usage: tenhou-dl <Tenhou ID> <Log path>
 Example: tenhou-dl ID12345678-6fnB8AoP \"C:\\tenhou\\logs\\\"~%"))
-        (t (setf lparallel:*kernel* (lparallel:make-kernel 8))
+        (t (setf lparallel:*kernel*
+                 (lparallel:make-kernel (cl-cpus:get-number-of-processors)))
            (format t "~%Downloaded ~a replay~:p~%"
                    (length (download-replays (second sb-ext:*posix-argv*)
                                              (third sb-ext:*posix-argv*)))))))
