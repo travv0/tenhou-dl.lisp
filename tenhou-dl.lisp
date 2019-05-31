@@ -2,6 +2,8 @@
 
 (in-package :tenhou-dl)
 
+(defvar *lock* (bt:make-lock))
+
 (defun -main ()
   (cond ((/= (length sb-ext:*posix-argv*) 3)
          (format t "Usage: tenhou-dl <Tenhou ID> <Log path>
@@ -29,7 +31,8 @@ Skips any replays that already exist in `log-dir'."
          (destination-path (format nil "~a/~a/~a" log-dir subdir file-name)))
     (unless (cl-fad:file-exists-p destination-path)
       (when (trivial-download:download full-url destination-path :quiet t)
-        (format t "~a ==>~%~t~t~a~%" full-url destination-path)
+        (bt:with-lock-held (*lock*)
+          (format t "~a ==>~%~t~t~a~%" full-url destination-path))
         destination-path))))
 
 (defun get-replay-urls (tenhou-id)
