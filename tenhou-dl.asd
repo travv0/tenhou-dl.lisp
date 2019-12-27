@@ -6,8 +6,8 @@
   :license  "Specify license here"
   :version "0.0.1"
   :serial t
-  :depends-on (:drakma
-               :cl-html-parse
+  :depends-on (:dexador
+               :plump
                :trivial-download
                :cl-fad
                :lparallel
