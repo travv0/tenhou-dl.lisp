@@ -7,7 +7,7 @@
   :version "0.0.1"
   :serial t
   :depends-on (:drakma
-               :cl-html-parse
+               :plump
                :trivial-download
                :cl-fad
                :lparallel
