@@ -4,6 +4,9 @@
 
 (defvar *lock* (bt:make-lock))
 
+#+lispworks
+(lw:set-default-character-element-type 'character)
+
 (unless lparallel:*kernel*
   (setf lparallel:*kernel* (lparallel:make-kernel 4)))
 
@@ -55,7 +58,8 @@ Skips any replays that already exist in `log-dir'."
 
 (defun get-replay-response (tenhou-id)
   (declare (string tenhou-id))
-  (dex:get (format nil "https://tenhou.net/0/log/find.cgi?un=~a" tenhou-id)))
+  (drakma:http-request "https://tenhou.net/0/log/find.cgi"
+                       :parameters (list (cons "un" tenhou-id))))
 
 (defun parse-replay-response (response)
   (declare (string response))
