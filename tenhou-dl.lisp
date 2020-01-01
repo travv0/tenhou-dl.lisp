@@ -4,12 +4,6 @@
 
 (defvar *lock* (bt:make-lock))
 
-#+lispworks
-(lw:set-default-character-element-type 'character)
-
-(unless lparallel:*kernel*
-  (setf lparallel:*kernel* (lparallel:make-kernel 4)))
-
 (defun -main ()
   (let ((args (get-command-line-args)))
     (cond ((/= (length args) 3)
