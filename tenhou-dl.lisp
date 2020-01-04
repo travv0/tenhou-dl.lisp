@@ -18,6 +18,7 @@ Example: tenhou-dl ID12345678-6fnB8AoP \"C:\\tenhou\\logs\\\"~%"))
 (defun get-command-line-args ()
   #+sbcl sb-ext:*posix-argv*
   #+lispworks system:*line-arguments-list*
+  #+ecl ext:*command-args*
   )
 
 (defun download-replays (tenhou-id log-dir)

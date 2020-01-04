@@ -6,7 +6,8 @@
   :license  "Specify license here"
   :version "0.0.1"
   :serial t
-  :depends-on (:drakma
+  :depends-on (:alexandria
+               :drakma
                :plump
                :trivial-download
                :cl-fad
