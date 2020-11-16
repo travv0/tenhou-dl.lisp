@@ -5,21 +5,14 @@
 (defvar *lock* (bt:make-lock))
 
 (defun -main ()
-  (let ((args (get-command-line-args)))
+  (let ((args (uiop:raw-command-line-arguments)))
     (cond ((/= (length args) 3)
            (format t "Usage: tenhou-dl <Tenhou ID> <Log path>
 Example: tenhou-dl ID12345678-6fnB8AoP \"C:\\tenhou\\logs\\\"~%"))
-          (t (setf lparallel:*kernel*
-                   (lparallel:make-kernel (cl-cpus:get-number-of-processors)))
-             (format t "~%Downloaded ~a replay~:p~%"
-                     (length (download-replays (second args)
-                                               (third args))))))))
-
-(defun get-command-line-args ()
-  #+sbcl sb-ext:*posix-argv*
-  #+lispworks system:*line-arguments-list*
-  #+ecl ext:*command-args*
-  )
+          (t (lparallel.kernel-util:with-temp-kernel ((cl-cpus:get-number-of-processors))
+               (format t "~%Downloaded ~a replay~:p~%"
+                       (length (download-replays (second args)
+                                                 (third args)))))))))
 
 (defun download-replays (tenhou-id log-dir)
   "Download all Tenhou replays for games played by user with ID `tenhou-id'
@@ -59,5 +52,5 @@ Skips any replays that already exist in `log-dir'."
 (defun parse-replay-response (response)
   (declare (string response))
   (loop for el in (plump:get-elements-by-tag-name (plump:parse response) "a")
-        when (equal (plump:get-attribute el "href") "DOWNLOAD")
-          collect (third (first el))))
+        when (equal (plump:text el) "DOWNLOAD")
+          collect (plump:get-attribute el "href")))

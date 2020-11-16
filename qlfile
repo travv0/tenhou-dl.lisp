@@ -1,5 +1,0 @@
-ql :all 2019-01-07
-ql drakma :latest
-ql cl-html-parse :latest
-ql trivial-download :latest
-ql cl-fad :latest
