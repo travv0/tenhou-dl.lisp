@@ -5,14 +5,17 @@
 (defvar *lock* (bt:make-lock))
 
 (defun -main ()
-  (let ((args (uiop:raw-command-line-arguments)))
-    (cond ((/= (length args) 3)
-           (format t "Usage: tenhou-dl <Tenhou ID> <Log path>
+  (handler-case
+      (let ((args (uiop:raw-command-line-arguments)))
+        (cond ((/= (length args) 3)
+               (format *error-output* "Usage: tenhou-dl <Tenhou ID> <Log path>
 Example: tenhou-dl ID12345678-6fnB8AoP \"C:\\tenhou\\logs\\\"~%"))
-          (t (lparallel.kernel-util:with-temp-kernel ((cl-cpus:get-number-of-processors))
-               (format t "~%Downloaded ~a replay~:p~%"
-                       (length (download-replays (second args)
-                                                 (third args)))))))))
+              (t (lparallel.kernel-util:with-temp-kernel ((cl-cpus:get-number-of-processors))
+                   (format t "~%Downloaded ~a replay~:p~%"
+                           (length (download-replays (second args)
+                                                     (third args))))))))
+    (error (e)
+      (format *error-output* "~%Error: ~a~%" e))))
 
 (defun download-replays (tenhou-id log-dir)
   "Download all Tenhou replays for games played by user with ID `tenhou-id'
