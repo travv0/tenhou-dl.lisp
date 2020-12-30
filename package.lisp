@@ -2,5 +2,4 @@
 
 (defpackage :tenhou-dl
   (:use :cl)
-  (:export :download-replays
-           :download-replay))
+  (:export :download-replays))
