@@ -24,7 +24,9 @@ Skips any replays that already exist in `log-dir'."
   (declare (string tenhou-id)
            ((or pathname string) log-dir))
   (remove-if #'null
-             (lparallel:pmapcar (lambda (url) (download-replay url log-dir))
+             (lparallel:pmapcar (lambda (url)
+                                  (handler-case (download-replay url log-dir)
+                                    (error (e) (format *error-output* "Warning: ~a~%" e))))
                                 (get-replay-urls tenhou-id))))
 
 (defun download-replay (url log-dir)
@@ -34,7 +36,8 @@ Skips any replays that already exist in `log-dir'."
   (let* ((full-url (if (search "tenhou.net" url)
                        url
                        (format nil "https://tenhou.net~a" url)))
-         (file-name (format nil "~a.mjlog" (subseq url (1+ (position #\= url)))))
+         (file-name (handler-case (format nil "~a.mjlog" (subseq url (1+ (position #\= url))))
+                      (error (e) (error "error parsing file name from ~a:~%~a" url e))))
          (subdir (subseq file-name 0 6))
          (destination-path (format nil "~a/~a/~a" log-dir subdir file-name)))
     (unless (cl-fad:file-exists-p destination-path)
